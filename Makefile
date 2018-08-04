@@ -13,6 +13,7 @@ libc:
 	cd libc/ && make install-headers && make
 
 clean:
+	rm sos.iso
 	rm -rf sysroot/
 	cd kernel/ && make clean
 	#cd libc/ && make clean
