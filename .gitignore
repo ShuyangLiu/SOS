@@ -3,3 +3,5 @@
 isodir
 sysroot
 *.kernel
+*.a
+*.d
