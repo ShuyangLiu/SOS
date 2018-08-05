@@ -8,7 +8,7 @@ LD:=i686-elf-ld
 
 CFLAGS:=-ffreestanding -O2 -g -Wall -Wextra
 LDFLAGS?=
-LIBS:=-nostdlib -lgcc
+LIBS:=-nostdlib -lk -lgcc
 
 PREFIX=/usr
 EXEC_PREFIX=$(PREFIX)

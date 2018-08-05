@@ -8,7 +8,10 @@ AR:=i686-elf-ar
 LD:=i686-elf-ld
 
 CFLAGS:=-ffreestanding -O2 -g -Wall -Wextra
+CPPFLAGS:=$(CPPFLAGS) -D__is_libc -Iinclude
 LIBK_CFLAGS:=$(CFLAGS)
+LIBK_CPPFLAGS:=$(CPPFLAGS) -D__is_libk
+
 LDFLAGS?=
 LIBS?=
 
@@ -16,6 +19,7 @@ PREFIX=/usr
 EXEC_PREFIX=$(PREFIX)
 BOOTDIR=/boot
 INCLUDEDIR=$(PREFIX)/include
+LIBDIR=$(PREFIX)/lib
 
 # Work around that the elf gcc target does not have a system include directory
 # because it was compiled with `--without-headers` rather than `--with-sysroot`
@@ -23,11 +27,11 @@ CC+= -isystem=$(INCLUDEDIR)
 
 # Add architecture specific flags
 ARCHDIR=arch/$(HOSTARCH)
-
 include $(ARCHDIR)/make.config
-
 CFLAGS:=$(CFLAGS) $(ARCH_CFLAGS)
+CPPFLAGS:=$(CPPFLAGS) $(ARCH_CPPFLAGS)
 LIBK_CFLAGS:=$(LIBK_CFLAGS) $(KERNEL_ARCH_CFLAGS)
+LIBK_CPPFLAGS:=$(LIBK_CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 
 FREEOBJS=\
 $(ARCH_FREEOBJS) \
@@ -65,16 +69,16 @@ libk.a: $(LIBK_OBJS)
 	$(AR) rcs $@ $(LIBK_OBJS)
 
 .c.o:
-	$(CC) -c $< -o $@ -std=gnu99 $(CFLAGS)
+	$(CC) -c $< -o $@ -std=gnu99 $(CFLAGS) $(CPPFLAGS)
 
 .c.s:
-	$(CC) -c $< -o $@ $(CFLAGS)
+	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 .c.libk.o:
-	$(CC) -c $< -o $@ -std=gnu99 $(LIBK_CFLAGS)
+	$(CC) -c $< -o $@ -std=gnu99 $(LIBK_CFLAGS) $(LIBK_CPPFLAGS)
 
 .s.libk.o:
-	$(CC) -c $< -o $@ $(LIBK_CFLAGS)
+	$(CC) -c $< -o $@ $(LIBK_CFLAGS) $(LIBK_CPPFLAGS)
 
 clean:
 	rm -f $(BINARIES) *.a

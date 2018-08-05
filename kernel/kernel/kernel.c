@@ -1,7 +1,5 @@
 
 #include <stdio.h>
-
-
 #include <kernel/tty.h>
 
 /* Check if the compiler thinks we are targeting the wrong operating system. */
@@ -47,5 +45,5 @@ void kernel_main(void)
 	/* Initialize terminal interface */
 	terminal_initialize();
 	/* Newline support is left as an exercise. */
-	terminal_writestring(OPEN_MSG);
+	printf(OPEN_MSG);
 }
