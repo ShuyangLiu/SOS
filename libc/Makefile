@@ -1,0 +1,95 @@
+HOSTARCH=i386
+SYSROOT=../sysroot
+DESTDIR=$(SYSROOT)
+
+CC:=i686-elf-gcc --sysroot=$(SYSROOT)
+AS:=i686-elf-as
+AR:=i686-elf-ar
+LD:=i686-elf-ld
+
+CFLAGS:=-ffreestanding -O2 -g -Wall -Wextra
+LIBK_CFLAGS:=$(CFLAGS)
+LDFLAGS?=
+LIBS?=
+
+PREFIX=/usr
+EXEC_PREFIX=$(PREFIX)
+BOOTDIR=/boot
+INCLUDEDIR=$(PREFIX)/include
+
+# Work around that the elf gcc target does not have a system include directory
+# because it was compiled with `--without-headers` rather than `--with-sysroot`
+CC+= -isystem=$(INCLUDEDIR)
+
+# Add architecture specific flags
+ARCHDIR=arch/$(HOSTARCH)
+
+include $(ARCHDIR)/make.config
+
+CFLAGS:=$(CFLAGS) $(ARCH_CFLAGS)
+LIBK_CFLAGS:=$(LIBK_CFLAGS) $(KERNEL_ARCH_CFLAGS)
+
+FREEOBJS=\
+$(ARCH_FREEOBJS) \
+stdio/printf.o \
+stdio/putchar.o \
+stdio/puts.o \
+stdlib/abort.o \
+string/memcmp.o \
+string/memcpy.o \
+string/memmove.o \
+string/memset.o \
+string/strlen.o \
+
+HOSTEDOBJS=\
+$(ARCH_HOSTEDOBJS) \
+
+OBJS=\
+$(FREEOBJS) \
+$(HOSTEDOBJS) \
+
+LIBK_OBJS=$(FREEOBJS:.o=.libk.o)
+
+#BINARIES=libc.a libk.a # Not ready for libc yet.
+BINARIES=libk.a
+
+.PHONY: all clean install install-headers install-libs
+.SUFFIXES: .o .libk.o .c .s
+
+all: $(BINARIES)
+
+libc.a: $(OBJS)
+	$(AR) rcs $@ $(OBJS)
+
+libk.a: $(LIBK_OBJS)
+	$(AR) rcs $@ $(LIBK_OBJS)
+
+.c.o:
+	$(CC) -c $< -o $@ -std=gnu99 $(CFLAGS)
+
+.c.s:
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+.c.libk.o:
+	$(CC) -c $< -o $@ -std=gnu99 $(LIBK_CFLAGS)
+
+.s.libk.o:
+	$(CC) -c $< -o $@ $(LIBK_CFLAGS)
+
+clean:
+	rm -f $(BINARIES) *.a
+	rm -f $(OBJS) $(LIBK_OBJS) *.o */*.o */*/*.o
+	rm -f $(OBJS:.o=.d) $(LIBK_OBJS:.o=.d) *.d */*.d */*/*.d
+
+install: install-headers install-libs
+
+install-headers:
+	mkdir -p $(DESTDIR)$(INCLUDEDIR)
+	cp -fR --preserve=timestamps include/. $(DESTDIR)$(INCLUDEDIR)/.
+
+install-libs: $(BINARIES)
+	mkdir -p $(DESTDIR)$(LIBDIR)
+	cp $(BINARIES) $(DESTDIR)$(LIBDIR)
+
+-include $(OBJS:.o=.d)
+-include $(LIBK_OBJS:.o=.d)

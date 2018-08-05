@@ -1,24 +1,25 @@
-.PHONY: all config kernel clean create-img run
+.PHONY: all setup kernel libc clean create-img run
 
-all: config kernel #libc
+all: setup libc kernel
 
-config:
+setup:
 	mkdir sysroot/
-	mkdir -p isodir/boot/grub
-
+	
 kernel:
 	cd kernel/ && make install-headers && make && make install-kernel
 
 libc:
-	cd libc/ && make install-headers && make
+	cd libc/ && make install-headers && make && make install-libs
 
 clean:
-	rm sos.iso
+	rm -f sos.iso
 	rm -rf sysroot/
+	rm -rf isodir/
 	cd kernel/ && make clean
-	#cd libc/ && make clean
+	cd libc/ && make clean
 
-create-img:
+create-img: all
+	mkdir -p isodir/boot/grub
 	cp sysroot/boot/sos.kernel isodir/boot/sos.kernel
 	cp grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o sos.iso isodir
