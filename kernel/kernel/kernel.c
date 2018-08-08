@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <kernel/tty.h>
+#include <kernel/gdt_init.h>
 
 /* Check if the compiler thinks we are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -42,6 +43,8 @@ static const char * OPEN_MSG =
 
 void kernel_main(void) 
 {
+	/* Initialize the GDT */
+	init_gdt();
 	/* Initialize terminal interface */
 	terminal_initialize();
 	/* Newline support is left as an exercise. */

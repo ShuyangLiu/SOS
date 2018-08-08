@@ -1,7 +1,12 @@
 #ifndef ARCH_I386_VGA_H
 #define ARCH_I386_VGA_H
- 
+
+#include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
+#include <string.h>
+#include <kernel/tty.h> 
+
 /* Hardware text mode color constants. */
 enum vga_color {
 	VGA_COLOR_BLACK 			= 0,

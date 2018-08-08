@@ -1,10 +1,3 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
- 
-#include <kernel/tty.h>
- 
 #include "vga.h"
 
 // Function Declarations
@@ -32,7 +25,7 @@ size_t strlen(const char* str)
 		len++;
 	return len;
 }
- 
+
 void terminal_initialize(void) 
 {
 	terminal_row = 0;
@@ -61,7 +54,6 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
  
 void terminal_putchar(char c) 
 {
-	// newline character
 	if (c == '\n') {
 		if (++terminal_row == VGA_HEIGHT)
 			terminal_scroll();
