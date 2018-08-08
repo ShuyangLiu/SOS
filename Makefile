@@ -1,6 +1,6 @@
-.PHONY: all setup kernel libc clean create-img run
+.PHONY: all setup kernel libc debug clean create-img run
 
-all: setup libc kernel
+all: setup libc kernel debug
 
 setup:
 	mkdir sysroot/
@@ -12,6 +12,9 @@ kernel:
 
 libc:
 	cd libc/ && make && make install-libs
+
+debug:
+	objcopy --only-keep-debug kernel/sos.kernel sos.sym
 
 clean:
 	rm -f sos.iso
@@ -28,4 +31,4 @@ create-img:
 
 
 run:
-	qemu-system-i386 -s -S -cdrom sos.iso
+	qemu-system-i386 -cdrom sos.iso

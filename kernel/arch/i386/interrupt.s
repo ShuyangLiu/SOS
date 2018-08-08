@@ -6,7 +6,7 @@
 	isr\n:
 		cli
 		push $0
-		push \n
+		push $\n
 		jmp isr_common_stub
 .endm
 
@@ -15,7 +15,7 @@
 	.type isr\n, @function
 	isr\n:
 		cli
-		push \n
+		push $\n
 		jmp isr_common_stub
 .endm
 
@@ -55,23 +55,7 @@ ISR_NOERRCODE 31
 
 isr_common_stub:
 	pusha
-	mov %ds, %ax
-	push %eax
-
-	mov $0x10, %ax
-	mov %ax, %ds
-	mov %ax, %es
-	mov %ax, %fs
-	mov %ax, %gs
-
 	call isr_handler
-
-	pop %eax
-	mov %ax, %ds
-	mov %ax, %es
-	mov %ax, %fs
-	mov %ax, %gs
-
 	popa
 	add $8, %esp
 	sti 
