@@ -104,17 +104,6 @@ static void
 gdt_set_gate(int32_t index, uint32_t base, uint32_t limit, 
 				uint8_t access, uint8_t gran)
 {
-	/*
-	gdt_entries[index] = {
-		.base_low 		= (base & 0xFFFF),
-		.base_middle 	= (base >> 16) & 0xFF,
-		.base_high 		= (base >> 24) & 0xFF,
-		.limit_low 		= (limit & 0xFFFF),
-		.granularity 	= (granularity & 0xF0) | ((limit >> 16) & 0x0F),
-		.access 		= access
-	};
-	*/
-
 	gdt_entries[index].base_low    = (base & 0xFFFF);
     gdt_entries[index].base_middle = (base >> 16) & 0xFF;
     gdt_entries[index].base_high   = (base >> 24) & 0xFF;

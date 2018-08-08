@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <kernel/tty.h>
 #include <kernel/gdt_init.h>
+#include <kernel/idt_init.h>
 
 /* Check if the compiler thinks we are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -40,13 +41,19 @@ static const char * OPEN_MSG =
 "                         |___/                                \n"
 "\n";
 
+static const char * DEBUG_MSG = "This is debug mode\n";
 
 void kernel_main(void) 
 {
 	/* Initialize the GDT */
 	init_gdt();
+	/* Initialize the IDT */
+	init_idt();
 	/* Initialize terminal interface */
 	terminal_initialize();
 	/* Newline support is left as an exercise. */
-	printf(OPEN_MSG);
+	printf(DEBUG_MSG);
+
+	asm volatile ("int $0x3");
+
 }

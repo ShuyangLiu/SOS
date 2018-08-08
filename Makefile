@@ -28,4 +28,4 @@ create-img:
 
 
 run:
-	qemu-system-i386 -cdrom sos.iso
+	qemu-system-i386 -s -S -cdrom sos.iso

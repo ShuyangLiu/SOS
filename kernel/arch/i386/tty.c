@@ -82,6 +82,32 @@ void terminal_writestring(const char* data)
 	terminal_write(data, strlen(data));
 }
 
+void terminal_writedec(int n)
+{
+	if (n == 0) {
+        terminal_putchar('0');
+        return;
+    }
+
+    int32_t acc = n;
+    char c[32];
+    int i = 0;
+    while (acc > 0) {
+        c[i] = '0' + acc%10;
+        acc /= 10;
+        i++;
+    }
+    c[i] = 0;
+
+    char c2[32];
+    c2[i--] = 0;
+    int j = 0;
+    while(i >= 0) {
+        c2[i--] = c[j++];
+    }
+    terminal_writestring(c2);
+}
+
 void terminal_memcpy(uint16_t * src, uint16_t * dst, size_t size)
 {
 	// Copies the memory from src to dst
