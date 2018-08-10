@@ -7,6 +7,13 @@
 #include <string.h>
 #include <kernel/tty.h> 
 
+/* The I/O ports */
+#define TERMINAL_COMMAND_PORT 		0x3D4
+#define TERMINAL_DATA_PORT 			0x3D5
+/* The I/O port commands */
+#define TERMINAL_HIGH_BYTE_COMMAND 	14
+#define TERMINAL_LOW_BYTE_COMMAND 	15
+
 /* Hardware text mode color constants. */
 enum vga_color {
 	VGA_COLOR_BLACK 			= 0,

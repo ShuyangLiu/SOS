@@ -20,6 +20,7 @@ clean:
 	rm -f sos.iso
 	rm -rf sysroot/
 	rm -rf isodir/
+	rm -f sos.sym
 	cd kernel/ && make clean
 	cd libc/ && make clean
 
