@@ -33,5 +33,5 @@ make run
 make clean
 ```
 
-### Current Progress
-Just finish setting up the GDT. Nothing fancy.
+### Current Progress and Next Step
+Just finish setting up the GDT. Currently working on IRQ handlers.
