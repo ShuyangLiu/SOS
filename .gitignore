@@ -6,3 +6,4 @@ sysroot
 *.a
 *.d
 sos.sym
+bochslog.txt
